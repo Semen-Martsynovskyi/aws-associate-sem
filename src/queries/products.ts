@@ -9,7 +9,7 @@ export function useAvailableProducts() {
     "available-products",
     async () => {
       const res = await axios.get<{ products: AvailableProduct[] }>(
-        `${import.meta.env.VITE_API_URL}/products`
+        `${API_PATHS.bff}/products`
       );
       return res.data.products;
     }
@@ -29,7 +29,7 @@ export function useAvailableProduct(id?: string) {
     ["product", { id }],
     async () => {
       const res = await axios.get<AvailableProduct>(
-        `${import.meta.env.VITE_API_URL}/products/${id}`
+        `${API_PATHS.bff}/products/${id}`
       );
       return res.data;
     },
