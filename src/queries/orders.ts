@@ -26,7 +26,7 @@ export function useUpdateOrderStatus() {
       const { id, ...data } = values;
       return axios.put(`${API_PATHS.order}/order/${id}/status`, data, {
         headers: {
-          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+          Authorization: `Basic ${localStorage.getItem("basic_token")}`,
         },
       });
     }
@@ -37,7 +37,7 @@ export function useSubmitOrder() {
   return useMutation((values: Omit<Order, "id">) => {
     return axios.put<Omit<Order, "id">>(`${API_PATHS.order}/order`, values, {
       headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+        Authorization: `Basic ${localStorage.getItem("basic_token")}`,
       },
     });
   });
@@ -56,7 +56,7 @@ export function useDeleteOrder() {
   return useMutation((id: string) =>
     axios.delete(`${API_PATHS.order}/order/${id}`, {
       headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+        Authorization: `Basic ${localStorage.getItem("basic_token")}`,
       },
     })
   );
