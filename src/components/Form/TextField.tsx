@@ -30,7 +30,7 @@ export function fieldToTextField({
     ...field,
     value: field.value ?? "",
     ...props,
-  };
+  } as MuiTextFieldProps;
 }
 
 const TextField = ({ children, ...props }: TextFieldProps) => {
