@@ -11,22 +11,50 @@ type AddProductToCartProps = {
 };
 
 export default function AddProductToCart({ product }: AddProductToCartProps) {
-  const { data = [], isFetching } = useCart();
+  const { data, isFetching } = useCart();
+  const cart = data?.data.cart;
+
   const { mutate: upsertCart } = useUpsertCart();
   const invalidateCart = useInvalidateCart();
-  const cartItem = data.find((i) => i.product.id === product.id);
+  const cartItems = cart?.cartItems ?? [];
+
+  const cartItem = cart?.cartItems.find((i) => i.product.id === product.id);
 
   const addProduct = () => {
-    upsertCart(
-      { product, count: cartItem ? cartItem.count + 1 : 1 },
-      { onSuccess: invalidateCart }
-    );
+    const updatedItemDto = {
+      product_id: product.id ?? "",
+      count: cartItem ? cartItem.count + 1 : 1,
+    };
+    upsertCart([
+      ...cartItems
+        .filter((ci) => ci.product.id !== product.id)
+        .map((ci) => ({
+          product_id: ci.product.id ?? "",
+          count: ci.count,
+        })),
+      updatedItemDto,
+    ]),
+      {
+        onSuccess: invalidateCart,
+      };
   };
 
   const removeProduct = () => {
     if (cartItem) {
       upsertCart(
-        { ...cartItem, count: cartItem.count - 1 },
+        [
+          ...cartItems
+            .filter((ci) => ci.product.id !== product.id)
+            .map((ci) => ({
+              product_id: ci.product.id ?? "",
+              count: ci.count,
+            })),
+          {
+            product_id: cartItem.product.id ?? "",
+            count: cartItem.count - 1,
+          },
+        ],
+
         { onSuccess: invalidateCart }
       );
     }
